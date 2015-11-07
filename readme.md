@@ -10,18 +10,29 @@ import Generator fomr 'audio-generator';
 
 
 var analyser = new Analyser({
-	/** Magnitude diapasone, in dB **/
+	// Magnitude diapasone, in dB
 	minDecibels: -100,
 	maxDecibels: -30,
 
-	/** Number of points to grab **/
+	// Number of time samples to transform to frequency
 	fftSize: 1024,
 
-	/** Number of points to plot */
+	// Number of frequencies, twice less than fftSize
 	frequencyBinCount: 1024/2,
 
-	/** Smoothing, or the priority of the old data over the new data */
-	smoothingTimeConstant: 0.2
+	// Smoothing, or the priority of the old data over the new data
+	smoothingTimeConstant: 0.2,
+
+	//number of channel to analyse,
+	channel: 0,
+
+	//Size of time data to buffer
+	bufferSize: 44100,
+
+	//Windowing function for fft, https://github.com/scijs/window-functions
+	applyWindow: function (i, N) {
+		//blackman window by default
+	}
 
 	//...pcm-stream params, if required
 });

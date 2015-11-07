@@ -12,6 +12,7 @@ var pcm = require('pcm-util');
 var fft = require('ndarray-fft');
 var ndarray = require('ndarray');
 var db = require('decibels/from-gain');
+var blackman = require('scijs-window-functions/blackman');
 
 
 /**
@@ -48,7 +49,7 @@ extend(Analyser.prototype, pcm.defaultFormat);
 
 
 /** Magnitude diapasone, in dB **/
-Analyser.prototype.minDecibels = -90;
+Analyser.prototype.minDecibels = -100;
 Analyser.prototype.maxDecibels = 0;
 
 
@@ -69,6 +70,13 @@ Analyser.prototype.bufferSize = 44100;
 
 /** Channel to capture */
 Analyser.prototype.channel = 0;
+
+/**
+ * Windowing function
+ * Same as used by chromium, but can be any from:
+ * https://github.com/scijs/window-functions
+ */
+Analyser.prototype.applyWindow = blackman;
 
 
 /**
@@ -120,9 +128,17 @@ Analyser.prototype._capture = function (chunk, cb) {
 		self._fftCount = 0;
 
 		var input = self._data.slice(-self.fftSize);
+
+		//do windowing
+		for (var i = 0; i < self.fftSize; i++) {
+			input[i] *= self.applyWindow(i, self.fftSize);
+		}
+
+		//create complex parts
 		var inputRe = ndarray(input);
 		var inputIm = ndarray(new Float32Array(self.fftSize));
 
+		//do fast fourier transform
 		fft(1, inputRe, inputIm);
 
 		//apply smoothing factor
@@ -218,7 +234,7 @@ Analyser.prototype.getFrequencyData = function (size) {
 	var result = [];
 	var minDb = self.minDecibels, maxDb = self.maxDecibels;
 
-	size = size || self.fftSize;
+	size = size || self.frequencyBinCount;
 
 	size = Math.min(size, self._fdata.length);
 
