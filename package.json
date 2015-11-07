@@ -1,0 +1,43 @@
+{
+  "name": "audio-analyser",
+  "version": "1.0.0",
+  "description": "Audio analyser stream",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/audio-lab/analyser"
+  },
+  "keywords": [
+    "analysernode",
+    "web-audio",
+    "web-audio-api",
+    "audio",
+    "sound",
+    "pcm",
+    "dsp"
+  ],
+  "author": "Deema Yvanow <dfcreative@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/audio-lab/analyser/issues"
+  },
+  "homepage": "https://github.com/audio-lab/analyser",
+  "dependencies": {
+    "inherits": "^2.0.1",
+    "ndarray": "^1.0.18",
+    "ndarray-fft": "^1.0.0",
+    "pcm-util": "^1.1.10",
+    "xtend": "^4.0.1"
+  },
+  "devDependencies": {
+    "almost-equal": "^1.0.0",
+    "audio-generator": "^1.1.0",
+    "simple-bufferstream": "^1.0.0"
+  }
+}
