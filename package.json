@@ -1,6 +1,6 @@
 {
   "name": "audio-analyser",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Audio analyser stream",
   "main": "index.js",
   "files": [
