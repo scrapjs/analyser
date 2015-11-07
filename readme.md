@@ -11,7 +11,7 @@ import Generator fomr 'audio-generator';
 
 var analyser = new Analyser({
 	/** Magnitude diapasone, in dB **/
-	minDecibels: -90,
+	minDecibels: -100,
 	maxDecibels: -30,
 
 	/** Number of points to grab **/
@@ -44,7 +44,7 @@ analyser.getByteTimeDomainData(arr);
 
 //Shortcut methods
 
-//return array with frequency data of size <= fftSize
+//return array with frequency data in decibels of size <= fftSize
 analyser.getFrequencyData(size);
 
 //return array with time data of size <= self.bufferSize (way more than fftSize)
@@ -56,8 +56,7 @@ Generator().pipe(analyser);
 
 ## Related
 
-> [AnalyserNode](https://developer.mozilla.org/en/docs/Web/API/AnalyserNode) — web-audio-api analyser node.<br/>
-> [audio-render](https://npmjs.org/package/audio-render) — wrapper of analyser node, providing cross-platform utilities for rendering streams.<br/>
+> [audio-render](https://npmjs.org/package/audio-render) — render audio streams.<br/>
 > [audio-spectrum](https://npmjs.org/package/audio-spectrum) — render audio spectrum.<br/>
 > [audio-spectrogram](https://npmjs.org/package/audio-spectrogram) — render audio spectrogram.<br/>
 > [audio-waveform](https://npmjs.org/package/audio-waveform) — render audio waveform.<br/>

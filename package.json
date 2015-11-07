@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/audio-lab/analyser",
   "dependencies": {
+    "decibels": "^1.0.1",
     "inherits": "^2.0.1",
     "ndarray": "^1.0.18",
     "ndarray-fft": "^1.0.0",
@@ -37,7 +38,6 @@
   },
   "devDependencies": {
     "almost-equal": "^1.0.0",
-    "audio-generator": "^1.1.0",
-    "simple-bufferstream": "^1.0.0"
+    "audio-generator": "^1.1.0"
   }
 }

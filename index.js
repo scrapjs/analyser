@@ -11,6 +11,7 @@ var extend = require('xtend/mutable');
 var pcm = require('pcm-util');
 var fft = require('ndarray-fft');
 var ndarray = require('ndarray');
+var db = require('decibels/from-gain');
 
 
 /**
@@ -48,7 +49,7 @@ extend(Analyser.prototype, pcm.defaultFormat);
 
 /** Magnitude diapasone, in dB **/
 Analyser.prototype.minDecibels = -90;
-Analyser.prototype.maxDecibels = -30;
+Analyser.prototype.maxDecibels = 0;
 
 
 /** Number of points to grab **/
@@ -125,9 +126,11 @@ Analyser.prototype._capture = function (chunk, cb) {
 		fft(1, inputRe, inputIm);
 
 		//apply smoothing factor
-		var k = self.smoothingTimeConstant;
+		var k = Math.min(1, Math.max(self.smoothingTimeConstant, 0));
+
+		//for magnitude imaginary component is blown away. Not necessary though.
 		for (var i = 0; i < self.fftSize; i++) {
-			self._fdata[i] = k* self._fdata[i] + (1 - k) * inputRe.get(i) / self.fftSize;
+			self._fdata[i] = k* self._fdata[i] + (1 - k) * Math.abs(inputRe.get(i)) / self.fftSize;
 		}
 	}
 
@@ -150,8 +153,10 @@ Analyser.prototype.getFloatFrequencyData = function (arr) {
 
 	if (!arr) return arr;
 
+	var minDb = self.minDecibels, maxDb = self.maxDecibels;
+
 	for (var i = 0, l = Math.min(self.frequencyBinCount, arr.length); i < l; i++) {
-		arr[i] = self._fdata[i];
+		arr[i] = Math.max(db(self._fdata[i]), minDb);
 	}
 
 	return arr;
@@ -163,12 +168,21 @@ Analyser.prototype.getByteFrequencyData = function (arr) {
 
 	if (!arr) return arr;
 
+	var minDb = self.minDecibels, maxDb = self.maxDecibels;
+	var rangeScaleFactor = maxDb === minDb ? 1 : 1 / (maxDb - minDb);
+
 	for (var i = 0, l = Math.min(self.frequencyBinCount, arr.length); i < l; i++) {
-		arr[i] = pcm.convertSample(self._fdata[i], {float: true}, {signed: false, bitDepth: 8});
+		var mg = Math.max(db(self._fdata[i]), minDb);
+
+		//the formula is from the chromium source
+		var scaledValue = 255 * (mg - minDb) * rangeScaleFactor;
+
+		arr[i] = scaledValue;
 	}
 
 	return arr;
 };
+
 
 
 Analyser.prototype.getFloatTimeDomainData = function (arr) {
@@ -200,14 +214,16 @@ Analyser.prototype.getByteTimeDomainData = function (arr) {
 
 
 Analyser.prototype.getFrequencyData = function (size) {
+	var self = this;
 	var result = [];
+	var minDb = self.minDecibels, maxDb = self.maxDecibels;
 
-	size = size || this.fftSize;
+	size = size || self.fftSize;
 
-	size = Math.min(size, this._fdata.length);
+	size = Math.min(size, self._fdata.length);
 
 	for (var i = 0; i < size; i++) {
-		result.push(this._fdata[i]);
+		result.push(Math.max(db(self._fdata[i]), minDb));
 	}
 
 	return result;
