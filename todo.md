@@ -1,0 +1,1 @@
+* Smoothen windowing, now there are leaps
