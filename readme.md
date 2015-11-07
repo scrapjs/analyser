@@ -5,8 +5,8 @@ Audio analyser stream. Provides API of the [AnalyserNode](https://developer.mozi
 [![npm install audio-analyser](https://nodei.co/npm/audio-analyser.png?mini=true)](https://npmjs.org/package/audio-analyser)
 
 ```js
-import Analyser from 'audio-analyser';
-import Generator fomr 'audio-generator';
+var Analyser = require('audio-analyser');
+var Generator = require('audio-generator');
 
 
 var analyser = new Analyser({
@@ -61,6 +61,7 @@ analyser.getFrequencyData(size);
 analyser.getTimeData(size);
 
 
+//Can be used both as a sink or pass-through
 Generator().pipe(analyser);
 ```
 
