@@ -23,15 +23,14 @@ var analyser = new Analyser({
 	// Smoothing, or the priority of the old data over the new data
 	smoothingTimeConstant: 0.2,
 
-	//number of channel to analyse,
+	// Number of channel to analyse
 	channel: 0,
 
-	//Size of time data to buffer
+	// Size of time data to buffer
 	bufferSize: 44100,
 
-	//Windowing function for fft, https://github.com/scijs/window-functions
-	applyWindow: function (i, N) {
-		//blackman window by default
+	// Windowing function for fft, https://github.com/scijs/window-functions
+	applyWindow: function (sampleNumber, totalSamples) {
 	}
 
 	//...pcm-stream params, if required
